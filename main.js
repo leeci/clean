@@ -14,6 +14,11 @@ new Vue({
       var suit = {}
 
       for (var key in data) {
+        if (data[key] === '') {
+          data.splice(key)
+          continue
+        }
+
         data[key] = data[key].split('\t')
 
         var num = parseInt(data[key][0])
@@ -67,7 +72,6 @@ new Vue({
         <tr>
           <th style="width: 350px;"></th>
           <th style="width: 80px;">{{$t('title.unit')}}</th>
-          <th style="width: 80px;">{{$t('title.switch_status')}}</th>
           <th style="width: 80px;">{{$t('title.pv')}}</th>
           <th style="width: 80px;">{{$t('title.sv')}}</th>
         </tr>`
@@ -76,22 +80,31 @@ new Vue({
           var unit = `Sec`
           var pv = typeof suit[key].pv !== 'undefined' ? `<opcx cid="${suit[key].pv}"></opcx>`:''
           var sv = ''
+          var pb = typeof suit[key].pb !== 'undefined' ? `<opcx cid="${suit[key].pb}"></opcx>`:''
 
           if (suit[key].sv instanceof Array) {
             for (var index in suit[key].sv) {
-              sv += `<opcx cid="${suit[key].sv[index]}"></opcx>`
+              sv += `<opcx cid="${suit[key].sv[index]}"></opcx>
+`
             }
-          } else if (typeof suit[key].sv !== 'undefined') {
-            sv += `<opcx cid="${suit[key].sv}"></opcx>`
           }
-          table +=`
-          <tr>
-            <td>${title}</td>
-            <td>${unit}</td>
-            <td>&nbsp;</td>
-            <td>${pv}</td>
-            <td>${sv}</td>
-          </tr>`
+
+          if (pb === '') {
+            table +=`
+            <tr>
+              <td>${title}</td>
+              <td>${unit}</td>
+              <td>${pv}</td>
+              <td>${sv}</td>
+            </tr>`
+          } else {
+            table +=`
+            <tr>
+              <td>${title}</td>
+              <td>${unit}</td>
+              <td colspan="2">${pb}</td>
+            </tr>`
+          }
 
           if (key == half) {
             table += `</tbody></table></td><td>`
@@ -102,5 +115,5 @@ new Vue({
       table += `</td></tr></table>`
       this.t = table
     }
-  }  
+  }
 })
