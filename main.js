@@ -101,7 +101,7 @@ new Vue({
             table +=`
             <tr>
               <td>${title}</td>
-              <td>${unit}</td>
+              <td></td>
               <td colspan="2">${pb}</td>
             </tr>`
           }
